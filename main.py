@@ -4,3 +4,5 @@ todo:
     2) block-schmeme of task
     3) task
 """
+def main():
+    pass
