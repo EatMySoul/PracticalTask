@@ -18,9 +18,14 @@ class Programm():
 if 1 > 2:
     print('noo')
 else:
-    print('foor')
+    if True:
+        print('fafaf')
+    else:
+        print('foor')
+        for i in range(5):
+            print('lol')
+print('lllasdas')
 """]
-        print(self.code[0],'init') #debug
         block_scheme = Block_Scheme(self.code[0])
         print(block_scheme.block_scheme)
 
@@ -85,28 +90,25 @@ class Block_Scheme():
         return block_scheme
 
     def code_parser(self,block_scheme,tab = 0):
-        while self.code_text[self.step][:tab] == tab*' ' and self.step < len(self.code_text) -1: 
-            if 'print' in self.code_text[self.step]:
-                block_scheme.append(self.code_text[self.step])
+        while self.code_text[self.step][:tab] == tab*' ' and self.step < len(self.code_text) -1:
+            string = self.code_text[self.step]
+            if 'print' in string or 'input' in string:
+                block_scheme.append(string)
                 self.step += 1
-                print('here',self.step)
-            elif 'if' in self.code_text[self.step]:
-                temp_scheme = [self.code_text[self.step]]
+            elif True:
+                temp_scheme = [string]
                 tab += 4
                 self.step += 1
                 temp_scheme = self.code_parser(temp_scheme,tab)
                 tab -= 4
-                block_scheme.append(temp_scheme)
-            elif 'else' in self.code_text[self.step]:
-                temp_scheme = [self.code_text[self.step]]
-                tab += 4
-                self.step += 1 
-                temp_scheme = self.code_parser(temp_scheme,tab)
-                tab -= 4
-                block_scheme.append(temp_scheme)
+                if 'if' in string:
+                    block_scheme.append([temp_scheme])
+                elif 'else' in string:
+                    block_scheme[-1].append(temp_scheme)
+                elif 'for' in string:
+                    block_scheme.append(temp_scheme)
         return block_scheme
-        #change name!
-
+                
 
     def show_scheme(self):
         pass
@@ -120,3 +122,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
