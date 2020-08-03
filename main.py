@@ -6,22 +6,43 @@ todo:
     2) block-schmeme of task
     3) task
 """
+
+
+
 class Programm():
 
     def __init__(self):
         self.selector = Selector()
-        self.choose = self.selector.start()
-        print(self.choose)
+        self.choose = self.selector.job()
+        self.code = ["""print('a')
+if 1 > 2:
+    print('noo')
+else:
+    print('foor')
+"""]
+        print(self.code[0],'init') #debug
+        block_scheme = Block_Scheme(self.code[0])
+        print(block_scheme.block_scheme)
+
+    def job(): #am i need it?
+        pass
+    
+    def execute_code(self,selector_choose):
+        exec(self.code[selector_choose])
+
+    def get_code(self,selector_choose):
+        return self.code[selector_choose]
+
 
 class Selector():
 
     def __init__(self):
-        self.selector_data = (1,2,3,4,5)
-        self.choose_count = len(self.selector_data) - 1
+        self.selector_data = ('1. Вычислить сумму элементов числового массива A = (a1 , a2 , ... , aN ).','12<',3,4,5)
+        self.data_count = len(self.selector_data) - 1
         self.selector_position = 0
         self.selector_show()
 
-    def start(self): 
+    def job(self): 
         with keyboard.Listener(on_press=self.on_press) as listener:
             listener.join()
         input()
@@ -31,11 +52,11 @@ class Selector():
         os.system('clear')
         if key == keyboard.Key.up:
             if self.selector_position == 0:
-                self.selector_position = self.choose_count
+                self.selector_position = self.data_count
             else:
                 self.selector_position -= 1
         elif key == keyboard.Key.down:
-            if self.selector_position == self.choose_count:
+            if self.selector_position == self.data_count:
                 self.selector_position = 0
             else:
                 self.selector_position += 1
@@ -44,25 +65,57 @@ class Selector():
         self.selector_show()
 
     def selector_show(self):
-        for i in range(self.choose_count + 1):
+        for i in range(self.data_count + 1):
             if i == self.selector_position:
                 print('\033[42m',self.selector_data[i],'\033[0m',sep='')
             else:
                 print(self.selector_data[i])
 
-
 class Block_Scheme():
 
-    def __init__(self):
+    def __init__(self,code_text):
+        self.code_text = code_text.split('\n')
+        print(self.code_text)
+        self.block_scheme = self.get_scheme_struct()
+
+    def get_scheme_struct(self):
+        self.step = 0
+        block_scheme = []
+        block_scheme = self.code_parser(block_scheme)
+        return block_scheme
+
+    def code_parser(self,block_scheme,tab = 0):
+        while self.code_text[self.step][:tab] == tab*' ' and self.step < len(self.code_text) -1: 
+            if 'print' in self.code_text[self.step]:
+                block_scheme.append(self.code_text[self.step])
+                self.step += 1
+                print('here',self.step)
+            elif 'if' in self.code_text[self.step]:
+                temp_scheme = [self.code_text[self.step]]
+                tab += 4
+                self.step += 1
+                temp_scheme = self.code_parser(temp_scheme,tab)
+                tab -= 4
+                block_scheme.append(temp_scheme)
+            elif 'else' in self.code_text[self.step]:
+                temp_scheme = [self.code_text[self.step]]
+                tab += 4
+                self.step += 1 
+                temp_scheme = self.code_parser(temp_scheme,tab)
+                tab -= 4
+                block_scheme.append(temp_scheme)
+        return block_scheme
+        #change name!
+
+
+    def show_scheme(self):
         pass
 
-    def finder():
-        pass
 
-    def adder(t):
-        pass
+
 
 def main():
+    os.system('clear')
     proc1 = Programm()
 
 if __name__ == "__main__":
