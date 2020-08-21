@@ -18,16 +18,9 @@ class Programm():
 if 1 > 2:
     print('noo')
 else:
-    if True:
-        print('fafaf')
-    else:
-        print('foor')
-        for i in range(5):
-            print('lol')
-print('lllasdas')
+    print('heheh')
 """]
-        block_scheme = Block_Scheme(self.code[0])
-        print(block_scheme.block_scheme)
+        block_scheme = Block_Scheme(self.code[self.choose])
 
     def job(): #am i need it?
         pass
@@ -42,7 +35,7 @@ print('lllasdas')
 class Selector():
 
     def __init__(self):
-        self.selector_data = ('1. Вычислить сумму элементов числового массива A = (a1 , a2 , ... , aN ).','12<',3,4,5)
+        self.selector_data = ('1. Вычислить сумму элементов числового массива A = (a1 , a2 , ... , aN ).','2',3,4,5)
         self.data_count = len(self.selector_data) - 1
         self.selector_position = 0
         self.selector_show()
@@ -67,6 +60,7 @@ class Selector():
                 self.selector_position += 1
         elif key == keyboard.Key.enter:
             return False
+        os.system('clear')
         self.selector_show()
 
     def selector_show(self):
@@ -80,8 +74,9 @@ class Block_Scheme():
 
     def __init__(self,code_text):
         self.code_text = code_text.split('\n')
-        print(self.code_text)
         self.block_scheme = self.get_scheme_struct()
+        print(self.block_scheme)
+        self.show_scheme(self.block_scheme)
 
     def get_scheme_struct(self):
         self.step = 0
@@ -107,12 +102,16 @@ class Block_Scheme():
                     block_scheme[-1].append(temp_scheme)
                 elif 'for' in string:
                     block_scheme.append(temp_scheme)
+        print('deep work')
         return block_scheme
                 
 
-    def show_scheme(self):
-        pass
-
+    def show_scheme(self,text):
+        for string in text:
+            if type(string) == list:
+                self.show_scheme(string)
+            else:
+                print(string)
 
 
 
