@@ -12,7 +12,9 @@ todo:
 class Programm():
 
     def __init__(self):
-        self.selector = Selector()
+        with open('practicalTasks.txt','r') as text:
+            selector_data = text.read().split('\n')[:-1]
+        self.selector = Selector(selector_data)
         self.choose = self.selector.job()
         self.code = ["""print('a')
 if 1 > 2:
@@ -34,10 +36,17 @@ else:
 
 class Selector():
 
-    def __init__(self):
-        self.selector_data = ('1. Вычислить сумму элементов числового массива A = (a1 , a2 , ... , aN ).','2',3,4,5)
+    #make it better
+    def __init__(self,selector_data):
+        self.selector_data = selector_data
         self.data_count = len(self.selector_data) - 1
+        #cuting
+        for i in range(self.data_count):
+            self.selector_data[i] = self.selector_data[i][:120] + (self.selector_data[i][120:] and "...")
         self.selector_position = 0
+        self.terminal_columns = int(os.popen('stty size','r').read().split()[0])
+        self.border_above = 0
+        self.border_below = self.terminal_columns - 1  
         self.selector_show()
 
     def job(self): 
@@ -50,13 +59,23 @@ class Selector():
         os.system('clear')
         if key == keyboard.Key.up:
             if self.selector_position == 0:
+                self.border_below = self.data_count + 1
+                self.border_above = self.data_count - self.terminal_columns + 1 
                 self.selector_position = self.data_count
             else:
+                if self.selector_position == self.border_above:
+                    self.border_below -= 1
+                    self.border_above -= 1
                 self.selector_position -= 1
         elif key == keyboard.Key.down:
             if self.selector_position == self.data_count:
+                self.border_below = self.terminal_columns - 1
+                self.border_above = 0
                 self.selector_position = 0
             else:
+                if self.selector_position == self.border_below - 1:
+                    self.border_below += 1
+                    self.border_above += 1
                 self.selector_position += 1
         elif key == keyboard.Key.enter:
             return False
@@ -64,7 +83,7 @@ class Selector():
         self.selector_show()
 
     def selector_show(self):
-        for i in range(self.data_count + 1):
+        for i in range(self.border_above,self.border_below):
             if i == self.selector_position:
                 print('\033[42m',self.selector_data[i],'\033[0m',sep='')
             else:
