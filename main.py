@@ -1,12 +1,6 @@
 from pynput import keyboard
+import tkinter as Tk
 import os
-"""
-todo:
-    1) selector
-    2) block-schmeme of task
-    3) task
-"""
-
 
 
 class Programm():
@@ -36,17 +30,19 @@ else:
 
 class Selector():
 
-    #make it better
     def __init__(self,selector_data):
         self.selector_data = selector_data
         self.data_count = len(self.selector_data) - 1
-        #cuting
+        #cuting 
+
         for i in range(self.data_count):
             self.selector_data[i] = self.selector_data[i][:120] + (self.selector_data[i][120:] and "...")
+
         self.selector_position = 0
-        self.terminal_columns = int(os.popen('stty size','r').read().split()[0])
+        self.terminal_columns = int(os.popen('stty size','r').read().split()[0]) - 1
         self.border_above = 0
         self.border_below = self.terminal_columns - 1  
+
         self.selector_show()
 
     def job(self): 
@@ -57,6 +53,7 @@ class Selector():
 
     def on_press(self,key):
         os.system('clear')
+
         if key == keyboard.Key.up:
             if self.selector_position == 0:
                 self.border_below = self.data_count + 1
@@ -67,6 +64,7 @@ class Selector():
                     self.border_below -= 1
                     self.border_above -= 1
                 self.selector_position -= 1
+                
         elif key == keyboard.Key.down:
             if self.selector_position == self.data_count:
                 self.border_below = self.terminal_columns - 1
@@ -77,13 +75,18 @@ class Selector():
                     self.border_below += 1
                     self.border_above += 1
                 self.selector_position += 1
+
         elif key == keyboard.Key.enter:
             return False
+
         os.system('clear')
         self.selector_show()
 
     def selector_show(self):
-        for i in range(self.border_above,self.border_below):
+        start = self.border_above if self.border_above > 0 else 0
+        end = self.border_below if self.border_below < self.data_count else self.data_count + 1
+
+        for i in range(start,end):
             if i == self.selector_position:
                 print('\033[42m',self.selector_data[i],'\033[0m',sep='')
             else:
@@ -106,10 +109,11 @@ class Block_Scheme():
     def code_parser(self,block_scheme,tab = 0):
         while self.code_text[self.step][:tab] == tab*' ' and self.step < len(self.code_text) -1:
             string = self.code_text[self.step]
+
             if 'print' in string or 'input' in string:
                 block_scheme.append(string)
                 self.step += 1
-            elif True:
+            elif True:                                  #not true
                 temp_scheme = [string]
                 tab += 4
                 self.step += 1
@@ -125,7 +129,7 @@ class Block_Scheme():
         return block_scheme
                 
 
-    def show_scheme(self,text):
+    def show_scheme(self,text):                         #todo
         for string in text:
             if type(string) == list:
                 self.show_scheme(string)
