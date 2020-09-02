@@ -1,5 +1,7 @@
 from pynput import keyboard
+import time
 import tkinter as Tk
+from code import CODE
 import os
 
 
@@ -8,15 +10,17 @@ class Programm():
     def __init__(self):
         with open('practicalTasks.txt','r') as text:
             selector_data = text.read().split('\n')[:-1]
+
+        self.code = CODE
         self.selector = Selector(selector_data)
-        self.choose = self.selector.job()
-        self.code = ["""print('a')
-if 1 > 2:
-    print('noo')
-else:
-    print('heheh')
-"""]
-        block_scheme = Block_Scheme(self.code[self.choose])
+
+        while True:
+            self.choose = self.selector.job()
+            print(selector_data[self.choose])
+            self.execute_code(self.choose)
+            input()
+            #block_scheme = Block_Scheme(self.code[self.choose]) unworked
+            #input()
 
     def job(): #am i need it?
         pass
@@ -43,9 +47,10 @@ class Selector():
         self.border_above = 0
         self.border_below = self.terminal_columns - 1  
 
-        self.selector_show()
 
     def job(self): 
+        os.system('clear')
+        self.selector_show()
         with keyboard.Listener(on_press=self.on_press) as listener:
             listener.join()
         input()
@@ -78,6 +83,9 @@ class Selector():
 
         elif key == keyboard.Key.enter:
             return False
+        
+        elif key == keyboard.Key.esc:
+            exit(0)
 
         os.system('clear')
         self.selector_show()
