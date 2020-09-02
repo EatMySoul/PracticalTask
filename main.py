@@ -5,18 +5,21 @@ from code import CODE
 import os
 
 
+
+
 class Programm():
 
     def __init__(self):
         with open('practicalTasks.txt','r') as text:
             selector_data = text.read().split('\n')[:-1]
-
+        with open('practicalTasks.txt','r') as text:
+            kostil_selector_data = text.read().split('\n')[:-1]   # Почему так $#&#! ?
         self.code = CODE
         self.selector = Selector(selector_data)
 
         while True:
             self.choose = self.selector.job()
-            print(selector_data[self.choose])
+            print(kostil_selector_data[self.choose])
             self.execute_code(self.choose)
             input()
             #block_scheme = Block_Scheme(self.code[self.choose]) unworked
@@ -32,6 +35,7 @@ class Programm():
         return self.code[selector_choose]
 
 
+
 class Selector():
 
     def __init__(self,selector_data):
@@ -41,6 +45,7 @@ class Selector():
 
         for i in range(self.data_count):
             self.selector_data[i] = self.selector_data[i][:120] + (self.selector_data[i][120:] and "...")
+            print('dowork')
 
         self.selector_position = 0
         self.terminal_columns = int(os.popen('stty size','r').read().split()[0]) - 1
@@ -99,6 +104,9 @@ class Selector():
                 print('\033[42m',self.selector_data[i],'\033[0m',sep='')
             else:
                 print(self.selector_data[i])
+
+
+
 
 class Block_Scheme():
 
